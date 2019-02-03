@@ -153,8 +153,7 @@ class TickPainter extends CustomPainter{
   final tickPaint;
   final textPainter;
   final textStyle;
-
-
+  
   TickPainter({
     this.tickCount = 35,
     this.ticksPerSection = 5,
