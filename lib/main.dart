@@ -19,7 +19,15 @@ class _MyAppState extends State<MyApp> {
   final Timer timer;
   _MyAppState()
       : timer = Timer(
-      maxTime: const Duration(minutes: 35));
+      maxTime: const Duration(minutes: 35)
+  );
+
+  _onTimeSelected(Duration newTime){
+    setState(() {
+      timer.currentTime = newTime;
+    });
+
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -44,6 +52,7 @@ class _MyAppState extends State<MyApp> {
                   currentTime: timer.currentTime,
                   maxTime: timer.maxTime,
                   ticksPerSection: 5,
+                  onTimeSelected: _onTimeSelected,
                 ),
                 Expanded(child: Container()),
                 TimerControls(
