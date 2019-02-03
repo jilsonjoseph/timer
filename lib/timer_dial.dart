@@ -6,11 +6,27 @@ final Color GRADIENT_TOP = const Color(0xFFF5F5F5);
 final Color GRADIENT_BOTTOM = const Color(0xFFE8E8E8);
 
 class TimerDial extends StatefulWidget {
+
+  final Duration currentTime;
+  final Duration maxTime;
+  final int ticksPerSection;
+
+
+  TimerDial({
+    this.currentTime = const Duration(minutes: 0),
+    this.maxTime = const Duration(minutes: 35),
+    this.ticksPerSection = 5,
+  });
+
   @override
   _TimerDialState createState() => _TimerDialState();
 }
 
 class _TimerDialState extends State<TimerDial> {
+
+  rotationPercent(){
+    return widget.currentTime.inSeconds / widget.maxTime.inSeconds;
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,13 +60,16 @@ class _TimerDialState extends State<TimerDial> {
                     padding: const EdgeInsets.all(55.0),
                     child: CustomPaint(
                       painter: TickPainter(
-
+                        tickCount: widget.maxTime.inMinutes,
+                        ticksPerSection: widget.ticksPerSection,
                       ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(65.0),
-                    child: TimerKnob(),
+                    child: TimerKnob(
+                      rotationPercent()
+                    ),
                   ),
                 ]
               ),
@@ -153,7 +172,7 @@ class TickPainter extends CustomPainter{
             -textPainter.height / 2,
           ),
         );
-        
+
         canvas.restore();
       }
 

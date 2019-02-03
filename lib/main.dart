@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timer/timer.dart';
 import 'package:timer/timer_controls.dart';
 import 'package:timer/timer_dial.dart';
 import 'package:timer/timer_time_display.dart';
@@ -8,8 +9,17 @@ final Color GRADIENT_BOTTOM = const Color(0xFFE8E8E8);
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  final Timer timer;
+  _MyAppState()
+      : timer = Timer(
+      maxTime: const Duration(minutes: 35));
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,19 +36,23 @@ class MyApp extends StatelessWidget {
                 colors: [GRADIENT_TOP,GRADIENT_BOTTOM],
               )
           ),
-        child: Center(
-          child: Column(
-            children: [
-              TimerTimeDisplay(),
-              TimerDial(),
-              Expanded(child: Container()),
-              TimerControls(
+          child: Center(
+            child: Column(
+              children: [
+                TimerTimeDisplay(),
+                TimerDial(
+                  currentTime: timer.currentTime,
+                  maxTime: timer.maxTime,
+                  ticksPerSection: 5,
+                ),
+                Expanded(child: Container()),
+                TimerControls(
 
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }
