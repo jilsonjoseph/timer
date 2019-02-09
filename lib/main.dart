@@ -16,11 +16,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  final Timer timer;
-  _MyAppState()
-      : timer = Timer(
-      maxTime: const Duration(minutes: 35)
-  );
+   Timer timer;
+  _MyAppState(){
+    timer = Timer(
+        maxTime: const Duration(minutes: 35),
+    onTimerUpdate: _onTimerUpdate,
+    );
+  }
 
   _onTimeSelected(Duration newTime){
     setState(() {
@@ -28,6 +30,21 @@ class _MyAppState extends State<MyApp> {
     });
 
   }
+
+  _onDialStopTurning(Duration newTime) {
+    setState((){
+      timer.currentTime = newTime;
+      timer.resume();
+    });
+  }
+
+  _onTimerUpdate(){
+      setState(() {
+        
+      });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -53,6 +70,7 @@ class _MyAppState extends State<MyApp> {
                   maxTime: timer.maxTime,
                   ticksPerSection: 5,
                   onTimeSelected: _onTimeSelected,
+                  onDialStopTurning: _onDialStopTurning,
                 ),
                 Expanded(child: Container()),
                 TimerControls(
