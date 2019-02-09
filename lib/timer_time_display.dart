@@ -18,10 +18,47 @@ class TimerTimeDisplay extends StatefulWidget {
   _TimerTimeDisplayState createState() => _TimerTimeDisplayState();
 }
 
-class _TimerTimeDisplayState extends State<TimerTimeDisplay> {
+class _TimerTimeDisplayState extends State<TimerTimeDisplay> with TickerProviderStateMixin {
 
   final DateFormat selectionTimeFormat =  DateFormat('mm');
   final DateFormat countdownTimeFormat =  DateFormat('mm:ss');
+
+  AnimationController selectionTimeSlideController;
+  AnimationController countdownTimeFadeController;
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    selectionTimeSlideController = AnimationController(
+        duration: const Duration(milliseconds: 150),
+        vsync: this,
+    )
+    ..addListener((){
+      setState((){});
+    });
+
+    countdownTimeFadeController = AnimationController(
+        duration: const Duration(milliseconds: 150),
+        vsync: this,
+    )
+    ..addListener((){
+      setState(() {
+
+      });
+    });
+
+    countdownTimeFadeController.value = 1.0;
+  }
+
+
+  @override
+  void dispose() {
+    selectionTimeSlideController.dispose();
+    countdownTimeFadeController.dispose();
+    super.dispose();
+  }
 
   get formattedSelectionTime {
     DateTime dateTime = DateTime(DateTime.now().year,0,0,0,0, widget.selectionTime.inSeconds);
@@ -35,6 +72,14 @@ class _TimerTimeDisplayState extends State<TimerTimeDisplay> {
 
   @override
   Widget build(BuildContext context) {
+
+    if(widget.timerState == TimerState.ready) {
+      selectionTimeSlideController.reverse();
+      countdownTimeFadeController.forward();
+    }else {
+      selectionTimeSlideController.forward();
+      countdownTimeFadeController.reverse();
+    }
     return Padding(
         padding: const EdgeInsets.only(top: 15.0),
         child: Stack(
@@ -42,7 +87,7 @@ class _TimerTimeDisplayState extends State<TimerTimeDisplay> {
           children: [Transform(
             transform: Matrix4.translationValues(
                 0.0,
-                widget.timerState == TimerState.ready ? 0.0: -200.0,
+                -200.0 * selectionTimeSlideController.value,
                 0.0
             ),
             child: Text(
@@ -57,7 +102,7 @@ class _TimerTimeDisplayState extends State<TimerTimeDisplay> {
               ),),
           ),
           Opacity(
-            opacity: widget.timerState != TimerState.ready ? 1.0 : 0.0,
+            opacity: 1.0 - countdownTimeFadeController.value,
             child: Text(
               formattedCountdownTime,
               textAlign: TextAlign.center,
