@@ -40,7 +40,7 @@ class _MyAppState extends State<MyApp> {
 
   _onTimerUpdate(){
       setState(() {
-        
+
       });
   }
 
@@ -64,7 +64,11 @@ class _MyAppState extends State<MyApp> {
           child: Center(
             child: Column(
               children: [
-                TimerTimeDisplay(),
+                TimerTimeDisplay(
+                  timerState: timer.state,
+                  selectionTime: timer.lastStartTime,
+                  countdownTime: timer.currentTime,
+                ),
                 TimerDial(
                   currentTime: timer.currentTime,
                   maxTime: timer.maxTime,

@@ -18,12 +18,12 @@ class Timer{
   set currentTime(Duration value) {
     if(state == TimerState.ready){
       _currentTime = value;
+      lastStartTime = currentTime;
     }
   }
 
   resume(){
     state = TimerState.running;
-    lastStartTime = currentTime;
     stopwatch.start();
     _tick();
   }
