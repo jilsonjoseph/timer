@@ -168,7 +168,8 @@ class _DialTurnGestureDetectorState extends State<DialTurnGestureDetector> {
 
   _onRadialDragUpdate(PolarCoord coord){
     if (startDragCoord != null) {
-      final angleDiff = coord.angle - startDragCoord.angle;
+      var angleDiff = coord.angle - startDragCoord.angle;
+      angleDiff = angleDiff >= 0.0 ? angleDiff :angleDiff + (2 * pi);
       final anglePercent = angleDiff/ (2 * pi);
       final timeDiffInSeconds = (anglePercent * widget.maxTime.inSeconds).round();
       selectedTime = Duration(seconds: startDragTime.inSeconds +timeDiffInSeconds);
@@ -177,6 +178,7 @@ class _DialTurnGestureDetectorState extends State<DialTurnGestureDetector> {
       widget.onTimeSelected(selectedTime);
     }
   }
+
 
   _onRadialDragEnd(){
     widget.onDialStopTurning(selectedTime);
