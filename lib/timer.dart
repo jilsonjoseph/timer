@@ -23,13 +23,47 @@ class Timer{
   }
 
   resume(){
-    state = TimerState.running;
-    stopwatch.start();
-    _tick();
+    if (state != TimerState.running){
+      state = TimerState.running;
+      stopwatch.start();
+      _tick();
+    }
+
   }
 
   pause(){
+    if(state == TimerState.running) {
+      state = TimerState.paused;
+      stopwatch.stop();
 
+      if (null != onTimerUpdate){
+        onTimerUpdate();
+      }
+    }
+  }
+
+  restart(){
+    if(state == TimerState.paused){
+      state = TimerState.running;
+      _currentTime = lastStartTime;
+      stopwatch.reset();
+      stopwatch.start();
+
+      _tick();
+    }
+  }
+
+  reset(){
+    if (state == TimerState.paused){
+      state = TimerState.ready;
+      _currentTime = const Duration(seconds: 0);
+      lastStartTime = _currentTime;
+      stopwatch.reset();
+
+      if(null != onTimerUpdate){
+        onTimerUpdate();
+      }
+    }
   }
 
   _tick(){

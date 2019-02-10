@@ -78,7 +78,19 @@ class _MyAppState extends State<MyApp> {
                 ),
                 Expanded(child: Container()),
                 TimerControls(
-
+                  timerState: timer.state,
+                  onPause: (){
+                    setState(() => timer.pause());
+                  },
+                  onResume: (){
+                    setState(() => timer.resume());
+                  },
+                  onRestart: (){
+                    setState(() => timer.restart());
+                  },
+                  onReset: (){
+                    setState(() => timer.reset());
+                  },
                 ),
               ],
             ),

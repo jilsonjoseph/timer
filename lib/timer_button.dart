@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 class TimerButton extends StatelessWidget {
   final IconData icon;
   final String text;
+  final Function() onPressed;
 
   TimerButton({
     this.icon,
     this.text,
+    this.onPressed,
   });
   @override
   Widget build(BuildContext context) {
     return FlatButton(
       splashColor: const Color(0x22000000),
-      onPressed: () {},
+      onPressed: onPressed,
       child: Padding(
         padding: const EdgeInsets.all(18.0),
         child: Row(
