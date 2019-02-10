@@ -70,6 +70,7 @@ class _MyAppState extends State<MyApp> {
                   countdownTime: timer.currentTime,
                 ),
                 TimerDial(
+                  timerState: timer.state,
                   currentTime: timer.currentTime,
                   maxTime: timer.maxTime,
                   ticksPerSection: 5,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:timer/timer_knob.dart';
+import 'package:timer/timer.dart';
+import 'package:timer/timer_dial_knob.dart';
 import "dart:math";
 import 'package:fluttery_dart2/gestures.dart';
 
@@ -8,6 +9,7 @@ final Color GRADIENT_BOTTOM = const Color(0xFFE8E8E8);
 
 class TimerDial extends StatefulWidget {
 
+  final TimerState timerState;
   final Duration currentTime;
   final Duration maxTime;
   final int ticksPerSection;
@@ -15,6 +17,7 @@ class TimerDial extends StatefulWidget {
   final Function(Duration) onDialStopTurning;
 
   TimerDial({
+    this.timerState,
     this.currentTime = const Duration(minutes: 0),
     this.maxTime = const Duration(minutes: 35),
     this.ticksPerSection = 5,
@@ -26,13 +29,53 @@ class TimerDial extends StatefulWidget {
   _TimerDialState createState() => _TimerDialState();
 }
 
-class _TimerDialState extends State<TimerDial> {
+class _TimerDialState extends State<TimerDial> with TickerProviderStateMixin{
 
-  rotationPercent(){
+  static const RESET_SPEED_PERCENT_PER_SECOND = 3.0;
+
+  TimerState prevTimerState;
+  double prevRotationPercent = 0.0;
+  AnimationController resetToZeroController;
+  Animation resettingAnimation;
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    resetToZeroController = new AnimationController(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    resetToZeroController.dispose();
+    super.dispose();
+  }
+
+  _rotationPercent(){
     return widget.currentTime.inSeconds / widget.maxTime.inSeconds;
   }
   @override
   Widget build(BuildContext context) {
+
+    if(widget.currentTime.inSeconds == 0 && prevTimerState != TimerState.ready){
+      resettingAnimation = Tween(begin: prevRotationPercent, end: 0.0)
+          .animate(resetToZeroController)
+          ..addListener(()=> setState((){}))
+          ..addStatusListener((status){
+            if (status == AnimationStatus.completed) {
+              setState(() => resettingAnimation = null);
+            }
+          });
+      resetToZeroController.duration = Duration(
+        milliseconds: ((prevRotationPercent / RESET_SPEED_PERCENT_PER_SECOND) * 1000).round()
+      );
+      resetToZeroController.forward(from: 0.0);
+    }
+
+    prevTimerState = widget.timerState;
+    prevRotationPercent = _rotationPercent();
+
     return DialTurnGestureDetector(
       currentTime: widget.currentTime,
       maxTime: widget.maxTime,
@@ -76,8 +119,10 @@ class _TimerDialState extends State<TimerDial> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(65.0),
-                      child: TimerKnob(
-                        rotationPercent()
+                      child: TimerDialKnob(
+                         rotationPercent: resettingAnimation == null
+                          ? _rotationPercent()
+                            : resettingAnimation.value,
                       ),
                     ),
                   ]

@@ -6,17 +6,19 @@ final Color GRADIENT_TOP = const Color(0xFFF5F5F5);
 final Color GRADIENT_BOTTOM = const Color(0xFFE8E8E8);
 
 
-class TimerKnob extends StatefulWidget {
+class TimerDialKnob extends StatefulWidget {
 
   final rotationPercent;
 
-  TimerKnob(this.rotationPercent);
+  TimerDialKnob({
+    this.rotationPercent
+  });
 
   @override
-  _TimerKnobState createState() => _TimerKnobState();
+  _TimerDialKnobState createState() => _TimerDialKnobState();
 }
 
-class _TimerKnobState extends State<TimerKnob> {
+class _TimerDialKnobState extends State<TimerDialKnob> {
   @override
   Widget build(BuildContext context) {
     return Stack(
