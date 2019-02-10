@@ -24,11 +24,22 @@ class Timer{
 
   resume(){
     if (state != TimerState.running){
+      if(state == TimerState.ready){
+        _currentTime = _roundToTheNearestMinute(_currentTime);
+        lastStartTime = _currentTime;
+      }
+
       state = TimerState.running;
       stopwatch.start();
       _tick();
     }
 
+  }
+
+  _roundToTheNearestMinute(duration){
+    return Duration(
+        minutes: (duration.inSeconds / 60).round()
+    );
   }
 
   pause(){
